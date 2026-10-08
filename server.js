@@ -18,6 +18,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Health check endpoint for hosting platforms (Render/Koyeb/Railway)
+app.get('/healthz', (req, res) => res.status(200).send('OK'));
+
 const JWT_SECRET = process.env.JWT_SECRET || 'railsense_secret_2024';
 
 // ─── PostgreSQL Connection Pool ──────────────────────────────────────────────
@@ -94,9 +97,13 @@ app.post('/api/auth/register', async (req, res) => {
 // Login
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
     if (!username || !password) return res.status(400).json({ error: 'Username and password required.' });
-    const result = await pool.query('SELECT * FROM users WHERE username=$1', [username]);
+    username = username.trim();
+    const result = await pool.query(
+      'SELECT * FROM users WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($1)',
+      [username]
+    );
     if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid username or password.' });
     const user = result.rows[0];
     const valid = await bcrypt.compare(password, user.password_hash);

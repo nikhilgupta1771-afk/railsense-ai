@@ -37,7 +37,16 @@ const pool = process.env.DATABASE_URL
       password: process.env.DB_PASSWORD || '723403',
       ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
     });
+process.on('uncaughtException', (err) => {
+  console.error('⚠️ Uncaught Exception caught:', err.message);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('⚠️ Unhandled Rejection caught:', reason);
+});
 
+pool.on('error', (err) => {
+  console.error('⚠️ Unexpected idle client error on PostgreSQL pool:', err.message);
+});
 pool.connect(async (err, client, done) => {
   if (err) { console.error('❌ PostgreSQL Connection Failed:', err.message); }
   else {

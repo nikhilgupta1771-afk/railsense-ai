@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title id="page-title">Device Tracker — RailSense AI</title>
+  <meta name="description" content="Track individual railway sensor devices by vendor device ID"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="/css/device.css"/>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h1>🔍 Device <span>Tracker</span></h1>
+    <div class="topbar-right">
+      <a href="/">🏠 Home</a>
+      <a href="/worker">👷 Worker Dashboard</a>
+    </div>
+  </div>
+
+  <!-- ====== SEARCH VIEW (shown when no ?id= param) ====== -->
+  <div id="search-view" style="display:none;">
+
+    <div class="search-section">
+      <div class="search-card">
+        <h2>🔎 Search Device by Vendor ID</h2>
+        <p>Enter a vendor device ID to view its individual sensor data and live charts</p>
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Enter vendor device ID..." autocomplete="off"/>
+          <button onclick="filterDevices()">Search</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="devices-section">
+      <h3>📡 All Registered Devices</h3>
+      <div class="device-count" id="device-count">Loading...</div>
+      <div class="device-grid" id="device-grid">
+        <div class="loading-msg"><span class="loading"></span> Loading devices...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ====== DETAIL VIEW (shown when ?id= is present) ====== -->
+  <div id="detail-view" style="display:none;">
+
+    <div class="device-header">
+      <div class="device-info-card">
+        <div class="device-info-left">
+          <h2>📡 Device: <span id="device-id-display">—</span></h2>
+          <div class="device-meta" id="record-count">Loading data...</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div class="live-badge"><div class="live-dot"></div> Live Streaming</div>
+          <a href="/device" style="background:rgba(255,255,255,0.08);border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:10px;text-decoration:none;font-size:0.85rem;font-weight:600;">← Back to All Devices</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-section">
+      <div class="charts-grid" id="charts-container">
+        <div class="loading-msg"><span class="loading"></span> Loading charts...</div>
+      </div>
+    </div>
+
+    <div class="data-section">
+      <div class="data-card">
+        <h4>📋 Recent Data Records (Last 50)</h4>
+        <div id="data-table-wrap" style="max-height:400px;overflow-y:auto;">
+          <div class="loading-msg"><span class="loading"></span> Loading table...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/js/device.js"></script>
+</body>
+</html>

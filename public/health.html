@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Health Monitor — RailSense AI</title>
+  <meta name="description" content="View Good, Poor, and Critical status for all sensor devices"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/health.css"/>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h1>🏥 Health <span>Monitor</span></h1>
+    <div class="topbar-right">
+      <a href="/">🏠 Home</a>
+      <a href="/device" class="primary">📡 Device Tracker</a>
+    </div>
+  </div>
+
+  <!-- SUMMARY SECTION -->
+  <div class="summary-section">
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>Total Monitored</h3>
+        <div class="val" id="sum-total">-</div>
+      </div>
+      <div class="summary-card good">
+        <h3>Good (In Range)</h3>
+        <div class="val" id="sum-good">-</div>
+      </div>
+      <div class="summary-card poor">
+        <h3>Poor (Near Edge)</h3>
+        <div class="val" id="sum-poor">-</div>
+      </div>
+      <div class="summary-card critical">
+        <h3>Critical (Out of Range)</h3>
+        <div class="val" id="sum-critical">-</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS SECTION -->
+  <div class="controls-section">
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="🔍 Search device ID or name..." autocomplete="off"/>
+    </div>
+    <div class="filter-tabs">
+      <button class="active" data-filter="All">All</button>
+      <button data-filter="Good" style="color:var(--green)">Good</button>
+      <button data-filter="Poor" style="color:var(--yellow)">Poor</button>
+      <button data-filter="Critical" style="color:var(--red)">Critical</button>
+    </div>
+  </div>
+
+  <!-- DEVICE GRID -->
+  <div class="devices-section">
+    <div class="device-grid" id="device-grid">
+      <div class="loading-msg"><span class="loading"></span> Initializing Health Monitor...</div>
+    </div>
+  </div>
+
+  <script src="/js/health.js"></script>
+</body>
+</html>

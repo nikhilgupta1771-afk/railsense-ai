@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RailSense AI — Railway Intelligence Platform</title>
+  <meta name="description" content="AI-powered railway sensor monitoring platform for workers and passengers"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/index.css"/>
+  
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">🚆</div>
+        <span class="logo-text">Rail<span>Sense</span> AI</span>
+      </a>
+      <div class="nav-status">
+        <div class="status-dot"></div>
+        <span id="nav-db-status">Connecting…</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="badge">🛰️ AI-Powered Railway Intelligence Platform</div>
+        <h1>Monitor. Predict.<br/><span class="gradient">Prevent Failures.</span></h1>
+        <p>Real-time railway sensor analytics powered by your PostgreSQL data. Detect anomalies, predict maintenance needs, and keep passengers informed — all from one platform.</p>
+        <div class="hero-buttons">
+          <a href="/worker" class="btn btn-primary" id="worker-btn">👷 Worker Dashboard</a>
+          <a href="/passenger" class="btn btn-green" id="passenger-btn">🚉 Passenger Portal</a>
+          <a href="/health" class="btn btn-primary" style="background:var(--green)">🏥 Health Monitor</a>
+          <a href="/device" class="btn btn-secondary" id="device-btn">📡 Device Tracker</a>
+        </div>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-value" id="stat-tables">–</div>
+            <div class="stat-label">Tables Detected</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-records">–</div>
+            <div class="stat-label">Total Records</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-uptime">99.9%</div>
+            <div class="stat-label">Uptime</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">Live</div>
+            <div class="stat-label">Real-time Updates</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DB STATUS -->
+  <section class="db-status-section" id="explore">
+    <div class="container">
+      <div class="db-card">
+        <h2>🗄️ Database Connection Status</h2>
+        <div class="db-indicator" id="db-indicator">
+          <div class="icon">⏳</div>
+          <div class="db-info">
+            <div class="label">PostgreSQL — localhost:5432/poster</div>
+            <div class="value" id="db-status-text"><span class="loading"></span> Connecting…</div>
+          </div>
+        </div>
+        <div style="margin-top: 24px;">
+          <h3 style="font-size: 1rem; margin-bottom: 16px; color: var(--muted);">📋 Detected Tables in Your Database</h3>
+          <div class="tables-grid" id="tables-grid">
+            <div style="color: var(--muted); padding: 20px;">Loading tables… <span class="loading"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTALS -->
+  <section class="portals">
+    <div class="container">
+      <div class="section-title">Choose Your Portal</div>
+      <div class="section-subtitle">Two dedicated interfaces — one for railway workers, one for passengers</div>
+      <div class="portals-grid">
+        <div class="portal-card worker" onclick="window.location='/worker'">
+          <div class="portal-icon">👷</div>
+          <div class="portal-title">Worker Dashboard</div>
+          <div class="portal-desc">Full-featured analytics for maintenance crews and railway engineers. Monitor every sensor in real time.</div>
+          <ul class="portal-features">
+            <li><div class="feat-dot"></div>Live sensor charts & graphs</li>
+            <li><div class="feat-dot"></div>Anomaly detection alerts</li>
+            <li><div class="feat-dot"></div>Health score per component</li>
+            <li><div class="feat-dot"></div>Data explorer & table viewer</li>
+            <li><div class="feat-dot"></div>Statistical summaries</li>
+          </ul>
+          <a href="/worker" class="btn btn-primary" style="width:100%; justify-content:center;">Open Worker Dashboard →</a>
+        </div>
+        <div class="portal-card passenger" onclick="window.location='/passenger'">
+          <div class="portal-icon">🚉</div>
+          <div class="portal-title">Passenger Portal</div>
+          <div class="portal-desc">Simple, beautiful status board for passengers. Know your train's safety and schedule at a glance.</div>
+          <ul class="portal-features">
+            <li><div class="feat-dot"></div>Train safety status board</li>
+            <li><div class="feat-dot"></div>Live delay information</li>
+            <li><div class="feat-dot"></div>Plain-language health status</li>
+            <li><div class="feat-dot"></div>System-wide alert banner</li>
+            <li><div class="feat-dot"></div>Mobile-friendly design</li>
+          </ul>
+          <a href="/passenger" class="btn btn-green" style="width:100%; justify-content:center;">Open Passenger Portal →</a>
+        </div>
+        <!-- 3D DIGITAL TWIN PORTAL CARD -->
+        <div class="portal-card twin" onclick="window.location='/train3d'">
+          <div class="portal-icon">🔮</div>
+          <div class="portal-title">3D Spatial Twin</div>
+          <div class="portal-desc">Immersive real-time WebGL canvas viewport. Manipulate, rotate, and run structural diagnostics on the system chassis matrix.</div>
+          <ul class="portal-features">
+            <li><div class="feat-dot"></div>Interactive 3D WebGL Engine</li>
+            <li><div class="feat-dot"></div>Live telemetry synchronization</li>
+            <li><div class="feat-dot"></div>Component health maps</li>
+            <li><div class="feat-dot"></div>Dynamic subsystem overlays</li>
+            <li><div class="feat-dot"></div>X-Ray breakdown mechanics</li>
+          </ul>
+          <a href="/train3d" class="btn btn-purple" style="width:100%; justify-content:center;">Open 3D Command Desk →</a>
+        </div>
+      </div>  
+    </div>
+
+
+
+
+  </section>
+
+
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <div class="section-title">Platform Capabilities</div>
+      <div class="section-subtitle" style="margin-bottom: 40px;">Powered by real-time PostgreSQL data</div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="f-icon">🔌</div>
+          <div class="f-title">Auto Table Detection</div>
+          <div class="f-desc">Connects to your PostgreSQL and auto-discovers all tables — no manual configuration needed.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">📊</div>
+          <div class="f-title">Live Sensor Charts</div>
+          <div class="f-desc">Real-time charts for vibration, temperature, speed, and pressure data with Socket.IO streaming.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">🚨</div>
+          <div class="f-title">Anomaly Detection</div>
+          <div class="f-desc">Automatically flags abnormal sensor readings using statistical z-score analysis.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">💯</div>
+          <div class="f-title">Health Scoring</div>
+          <div class="f-desc">Calculates a 0–100 health score for each component based on sensor deviation from normal ranges.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">🗺️</div>
+          <div class="f-title">Data Explorer</div>
+          <div class="f-desc">Browse, filter, and analyze your raw sensor tables directly from the browser.</div>
+        </div>
+        <div class="feature-card">
+          <div class="f-icon">📱</div>
+          <div class="f-title">Responsive Design</div>
+          <div class="f-desc">Works perfectly on desktop, tablet, and mobile for both workers in the field and passengers.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>🚆 <strong>RailSense AI</strong> — Railway Predictive Maintenance & Monitoring System</p>
+    <p style="margin-top: 8px; font-size: 0.8rem;">Connected to PostgreSQL · localhost:5432</p>
+    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted);">
+      <p>Created by: <strong>Nikhil Gupta</strong></p>
+      <p style="margin-top: 4px;">Contact: <a href="mailto:nikhilgupta1881@gmail.com" style="color: var(--accent2); text-decoration: none;">nikhilgupta1881@gmail.com</a></p>
+    </div>
+  </footer>
+
+  <script src="/js/index.js"></script>
+</body>
+</html>

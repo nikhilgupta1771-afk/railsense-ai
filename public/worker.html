@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Worker Dashboard — RailSense AI</title>
+  <meta name="description" content="Railway sensor monitoring dashboard for maintenance workers"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/worker.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Enforce Authentication
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+    }
+    
+    // Intercept fetch to add Auth header
+    const originalFetch = window.fetch;
+    window.fetch = function() {
+      let [resource, config] = arguments;
+      if (!config) config = {};
+      if (!config.headers) config.headers = {};
+      config.headers['Authorization'] = 'Bearer ' + token;
+      return originalFetch(resource, config);
+    };
+  </script>
+  
+</head>
+<script type="importmap">
+{
+  "imports": {
+    "three":"https://cdn.jsdelivr.net/npm/three@0.161/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.161/examples/jsm/"
+  }
+}
+</script>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🚆</div>
+      <span class="logo-text">Rail<span>Sense</span></span>
+    </div>
+
+    <div class="sidebar-section">Navigation</div>
+    <div class="nav-item active" onclick="showSection('overview')">
+      <span class="icon">📊</span> <span>Overview</span>
+    </div>
+    <div class="nav-item" onclick="showSection('charts')">
+      <span class="icon">📈</span> <span>Live Charts</span>
+    </div>
+    <div class="nav-item" onclick="showSection('anomalies')">
+      <span class="icon">🚨</span> <span>Anomalies</span>
+    </div>
+    <div class="nav-item" onclick="showSection('dataexplorer')">
+      <span class="icon">🗃️</span> <span>Data Explorer</span>
+    </div>
+    <div class="nav-item" onclick="showSection('stats')">
+      <span class="icon">📉</span> <span>Statistics</span>
+    </div>
+    <div class="nav-item" onclick="window.location='/'">
+      <span class="icon">🏠</span> <span>Home</span>
+    </div>
+
+    <div class="sidebar-section">Database Tables</div>
+    <div class="sidebar-tables" id="sidebar-tables">
+      <div style="color:var(--muted); font-size:0.8rem; padding:8px 12px;">Loading… <span class="loading"></span></div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="db-badge">
+        <div class="db-dot"><div class="pulse-dot"></div> PostgreSQL</div>
+        <div class="db-info">localhost:5432 / poster</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <h1>Worker <span>Dashboard</span></h1>
+      <div class="topbar-right">
+        <div class="time-badge" id="clock">Loading…</div>
+        <button class="alert-btn" onclick="showSection('anomalies')">🚨 <span id="alert-count">0</span> Alerts</button>
+        <a href="/passenger" style="background:linear-gradient(135deg,#10b981,#059669);border:none;color:white;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;text-decoration:none;">🚉 Passenger View</a>
+      </div>
+    </div>
+
+    <!-- OVERVIEW SECTION -->
+    <div id="section-overview">
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-label">📋 Total Records</div>
+          <div class="kpi-value" id="kpi-records">–</div>
+          <div class="kpi-sub" id="kpi-table-name">Loading…</div>
+          <div class="kpi-icon">📦</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">💯 Health Score</div>
+          <div class="kpi-value" id="kpi-health">–</div>
+          <div class="kpi-sub" id="kpi-health-label">Calculating…</div>
+          <div class="kpi-icon">💚</div>
+        </div>
+        <div class="kpi-card yellow">
+          <div class="kpi-label">📋 DB Tables</div>
+          <div class="kpi-value" id="kpi-tables">–</div>
+          <div class="kpi-sub">Detected tables</div>
+          <div class="kpi-icon">🗄️</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">🚨 Anomalies</div>
+          <div class="kpi-value" id="kpi-anomalies">–</div>
+          <div class="kpi-sub">Columns flagged</div>
+          <div class="kpi-icon">⚠️</div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">📈 Sensor Data Chart</span>
+            <span class="panel-badge" id="chart-table-badge">Select Table</span>
+          </div>
+          <div class="table-select-bar">
+            <label>Table:</label>
+            <select class="table-select" id="chart-table-select" onchange="loadChart()">
+              <option>Loading…</option>
+            </select>
+            <label>Column:</label>
+            <select class="table-select" id="chart-col-select" onchange="loadChart()">
+              <option>Select table first</option>
+            </select>
+            <button class="btn-refresh" onclick="loadChart()">↺ Refresh</button>
+          </div>
+          <div class="panel-body">
+            <div class="chart-container">
+              <canvas id="sensorChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">🚨 Live Alerts</span>
+            <span class="panel-badge" id="alerts-badge">0</span>
+          </div>
+          <div class="panel-body">
+            <div class="alert-list" id="alerts-list">
+              <div class="loading-msg">Loading… <span class="loading"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS SECTION -->
+    <div id="section-charts" style="display:none;">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">📈 Multi-Column Live Charts</span>
+        </div>
+        <div class="table-select-bar">
+          <label>Table:</label>
+          <select class="table-select" id="mc-table-select" onchange="loadMultiChart()">
+            <option>Loading…</option>
+          </select>
+          <button class="btn-refresh" onclick="loadMultiChart()">↺ Refresh</button>
+        </div>
+        <div class="panel-body">
+          <div id="multi-charts-grid" style="display:grid; gap:20px;">
+            <div class="loading-msg">Select a table to view charts <span class="loading"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANOMALIES SECTION -->
+    <div id="section-anomalies" style="display:none;">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">🚨 Anomaly Detection</span>
+          <span class="panel-badge">Z-Score Analysis</span>
+        </div>
+        <div class="table-select-bar">
+          <label>Table:</label>
+          <select class="table-select" id="anom-table-select" onchange="loadAnomalies()">
+            <option>Loading…</option>
+          </select>
+        </div>
+        <div class="panel-body">
+          <div id="anomalies-content">
+            <div class="loading-msg">Select a table to detect anomalies <span class="loading"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA EXPLORER SECTION -->
+    <div id="section-dataexplorer" style="display:none;">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">🗃️ Data Explorer</span>
+          <span class="panel-badge" id="explorer-count">0 rows</span>
+        </div>
+        <div class="table-select-bar">
+          <label>Table:</label>
+          <select class="table-select" id="explorer-table-select" onchange="loadExplorer()">
+            <option>Loading…</option>
+          </select>
+          <label>Rows:</label>
+          <select class="table-select" id="explorer-limit" onchange="loadExplorer()">
+            <option value="50">50</option>
+            <option value="100" selected>100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+          <button class="btn-refresh" onclick="loadExplorer()">↺ Refresh</button>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <div class="data-table-wrap">
+            <table class="data-table" id="data-table">
+              <thead><tr><th>Select a table</th></tr></thead>
+              <tbody><tr><td class="loading-msg">Use the selector above to explore your data.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS SECTION -->
+    <div id="section-stats" style="display:none;">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">📉 Statistical Summary</span>
+        </div>
+        <div class="table-select-bar">
+          <label>Table:</label>
+          <select class="table-select" id="stats-table-select" onchange="loadStats()">
+            <option>Loading…</option>
+          </select>
+        </div>
+        <div class="panel-body">
+          <div id="stats-content">
+            <div class="loading-msg">Select a table to see statistics</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/worker.js"></script>
+</body>
+</html>

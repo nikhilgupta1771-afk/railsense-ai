@@ -1,0 +1,440 @@
+/* ─── RESET & ROOT VARIABLES ─────────────────────────────────────────────── */
+:root {
+  --bg-dark: #070b13;
+  --panel-bg: rgba(15, 23, 42, 0.75);
+  --border-glow: rgba(255, 255, 255, 0.08);
+  --text-main: #f1f5f9;
+  --text-muted: #64748b;
+  --accent-cyan: #0ea5e9;
+  
+  --color-nominal: #10b981;
+  --color-warning: #f59e0b;
+  --color-critical: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ─── SCENE LAYER CONTAINER ─────────────────────────────────────────────── */
+#canvas-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ─── INTERACTIVE HEADS UP DISPLAY OVERLAY ──────────────────────────────── */
+.hud-overlay {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none; /* Allows user interactions to pass through to canvas */
+}
+
+/* Enable pointer events on panels to allow UI interaction */
+.hud-header, .telemetry-stack, .inspector-panel, .hud-footer {
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+  background: var(--panel-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 14px;
+}
+
+/* ─── TOP BAR HEADER ELEMENTS ───────────────────────────────────────────── */
+.hud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.header-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-logo {
+  font-size: 1.8rem;
+}
+
+.hud-header h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(to right, #fff, var(--accent-cyan));
+  -webkit-background-clip: text;
+  background-clip: text; /* FIXED: Added standard property for full browser compatibility */
+  -webkit-text-fill-color: transparent;
+}
+
+.hud-header p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 30px;
+  letter-spacing: 0.5px;
+}
+
+/* ─── DASHBOARD WORKSPACE GRID ──────────────────────────────────────────── */
+.hud-main-grid {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.telemetry-stack {
+  width: 330px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+}
+
+/* ─── METRIC PANEL CARDS ────────────────────────────────────────────────── */
+.metric-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-lbl {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.stat-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 1.05rem;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+/* ─── PROGRESS BAR GRAPHICS ─────────────────────────────────────────────── */
+.fluid-gauge-container {
+  margin-top: 14px;
+}
+
+.fluid-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.fluid-labels span:last-child {
+  font-family: monospace;
+  color: var(--text-main);
+  font-size: 0.85rem;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--accent-cyan);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+/* ─── INSPECTOR SIDEBAR PANEL ───────────────────────────────────────────── */
+.inspector-panel {
+  width: 300px;
+  align-self: flex-end;
+  padding: 20px;
+  margin-bottom: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.inspector-panel h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.05); /* FIXED: Swapped Tailwind 'border-b' out for native 'border-bottom' */
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.inspector-fallback {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.inspector-details h4 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+.inspector-desc {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* ─── DYNAMIC STATUS STATE COLOR THEMES ─────────────────────────────────── */
+.badge-nominal { background: rgba(16, 185, 129, 0.15); color: var(--color-nominal); border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--color-warning); border: 1px solid rgba(245, 158, 11, 0.3); animation: pulse-border 2s infinite; }
+.badge-critical { background: rgba(244, 63, 94, 0.15); color: var(--color-critical); border: 1px solid rgba(244, 63, 94, 0.3); animation: flash-red 1s infinite alternate; }
+
+.lbl-nominal { background: rgba(16, 185, 129, 0.15); color: var(--color-nominal); }
+.lbl-warning { background: rgba(245, 158, 11, 0.15); color: var(--color-warning); }
+.lbl-critical { background: rgba(244, 63, 94, 0.15); color: var(--color-critical); }
+
+/* Dynamic Card Highlight Mutators */
+.card-warning { border-color: rgba(245, 158, 11, 0.4) !important; background: rgba(245, 158, 11, 0.04); }
+.card-critical { border-color: rgba(244, 63, 94, 0.4) !important; background: rgba(244, 63, 94, 0.05); }
+
+/* ─── BOTTOM FOOTER ─────────────────────────────────────────────────────── */
+.hud-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background-color: var(--color-nominal);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-nominal);
+}
+
+/* ─── KEYFRAME ANIMATION LOOPS ──────────────────────────────────────────── */
+@keyframes flash-red {
+  0% { box-shadow: 0 0 4px rgba(244,63,94,0.2); }
+  100% { box-shadow: 0 0 16px rgba(244,63,94,0.6); background: rgba(244,63,94,0.25); }
+}
+
+
+
+/* ─── HEADER ACTIONS & HOME NAVIGATION BUTTON ───────────────────────────── */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glow);
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 7px 16px;
+  border-radius: 30px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-home .home-icon {
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+/* ─── BUTTON INTERACTIVE STATES ─────────────────────────────────────────── */
+
+.btn-home:hover {
+  background: rgba(14, 165, 233, 0.12); /* Faded accent cyan backdrop */
+  border-color: var(--accent-cyan);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.25);
+}
+
+/* Subtle house bounce when hovered */
+.btn-home:hover .home-icon {
+  transform: scale(1.15);
+}
+
+.btn-home:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 5px rgba(14, 165, 233, 0.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

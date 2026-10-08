@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forgot Password — RailSense AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/forgot.css" />
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="logo">RailSense <span>AI</span></div>
+    
+    <div id="error-msg"></div>
+    <div id="success-msg"></div>
+
+    <!-- Step 1: Request OTP -->
+    <div id="step1-email" class="step-container active">
+      <h2>Forgot Password?</h2>
+      <p class="desc">Enter your registered email address and we'll send you a 6-digit verification code.</p>
+      
+      <form id="form-email">
+        <div class="input-group">
+          <label>Email Address</label>
+          <input type="email" id="email" required placeholder="john@example.com" />
+        </div>
+        <button type="submit" class="btn" id="btn-send">Send OTP</button>
+      </form>
+    </div>
+
+    <!-- Step 2: Verify OTP and Reset Password -->
+    <div id="step2-otp" class="step-container">
+      <h2>Verify OTP</h2>
+      <p class="desc">Enter the 6-digit code sent to <strong id="display-email"></strong>.</p>
+      <p class="desc" style="color: #f59e0b; margin-top: -16px; font-weight: 500;" id="timer-text"></p>
+      
+      <form id="form-reset">
+        <div class="otp-group" id="otp-inputs">
+          <input type="text" maxlength="1" class="otp-char" autofocus />
+          <input type="text" maxlength="1" class="otp-char" />
+          <input type="text" maxlength="1" class="otp-char" />
+          <input type="text" maxlength="1" class="otp-char" />
+          <input type="text" maxlength="1" class="otp-char" />
+          <input type="text" maxlength="1" class="otp-char" />
+        </div>
+        
+        <div class="input-group">
+          <label>New Password</label>
+          <input type="password" id="new-password" required placeholder="••••••••" minlength="6" />
+        </div>
+        <button type="submit" class="btn" id="btn-reset">Reset Password</button>
+      </form>
+    </div>
+
+    <a href="/login" class="link-back">← Back to Login</a>
+  </div>
+
+  <script src="/js/forgot.js"></script>
+</body>
+</html>

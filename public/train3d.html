@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RailSense AI — 3D Digital Twin Core</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Custom Independent Dashboard Stylesheet -->
+  <link rel="stylesheet" href="/css/train3d.css">
+
+  <!-- Core Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+  <!-- WebGL 3D Scene Viewport Container -->
+  <div id="canvas-viewport"></div>
+
+  <!-- Foreground Heads-Up-Display Overlay -->
+  <div class="hud-overlay">
+    
+   <!-- Top System Header -->
+    <header class="hud-header">
+      <div class="header-main">
+        <div class="header-logo">🚆</div>
+        <div>
+          <h1>RAILSENSE AI // INTERACTIVE TWIN</h1>
+          <p id="live-timestamp">Awaiting backend telemetry sync...</p>
+        </div>
+      </div>
+      
+      <!-- Right Header Actions Container -->
+      <div class="header-actions">
+        <a href="/" class="btn-home">
+          <span class="home-icon">🏠</span> Return Home
+        </a>
+        <div id="global-status-badge" class="badge badge-nominal">
+          SYSTEMS NOMINAL
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Dashboard Grid -->
+    <main class="hud-main-grid">
+      
+      <!-- Left Telemetry Status Stack -->
+      <section class="telemetry-stack">
+        
+        <!-- Component: Gears -->
+        <div id="card-gears" class="metric-card">
+          <div class="card-header">
+            <h3>⚙️ Transmission Gears</h3>
+            <span id="badge-gears" class="status-lbl lbl-nominal">NOMINAL</span>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box"><span class="stat-label">TEMPERATURE</span><span id="val-gears-temp">--</span>°C</div>
+            <div class="stat-box"><span class="stat-label">VIBRATION</span><span id="val-gears-vibe">--</span> mm/s</div>
+          </div>
+        </div>
+
+        <!-- Component: Oil -->
+        <div id="card-oil" class="metric-card">
+          <div class="card-header">
+            <h3>🛢️ Lubrication System</h3>
+            <span id="badge-oil" class="status-lbl lbl-nominal">NOMINAL</span>
+          </div>
+          <div class="fluid-gauge-container">
+            <div class="fluid-labels"><span>Volume Capacity:</span> <span id="val-oil-level">--%</span></div>
+            <div class="progress-bar-track">
+              <div id="bar-oil-level" class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Component: Wheels -->
+        <div id="card-wheels" class="metric-card">
+          <div class="card-header">
+            <h3>🎡 Wheel Bogie Units</h3>
+            <span id="badge-wheels" class="status-lbl lbl-nominal">NOMINAL</span>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box"><span class="stat-label">VELOCITY</span><span id="val-wheels-rpm">--</span> RPM</div>
+            <div class="stat-box"><span class="stat-label">WEAR INDEX</span><span id="val-wheels-wear">--</span></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Selection Details Inspector -->
+      <aside class="inspector-panel">
+        <h2>🔎 Component Inspector</h2>
+        <div id="inspector-output" class="inspector-fallback">
+          Click any component part on the 3D model to isolate physical sensor metrics.
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- Bottom Status Bar -->
+    <footer class="hud-footer">
+      <div class="connection-status">
+        <span class="pulse-dot"></span>
+        <span id="node-sync-id">Sync Node: Disconnected</span>
+      </div>
+      <div class="controls-hint">💻 Left-Click + Drag to Orbit Scene | Right-Click to Pan</div>
+    </footer>
+
+  </div>
+
+  <!-- Embedded 3D Framework Orchestrator logic script -->
+  <script src="/js/train3d.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

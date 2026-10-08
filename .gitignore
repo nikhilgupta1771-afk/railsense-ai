@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment variables (NEVER push this - contains passwords!)
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+ml_model/__pycache__/
+
+# Test files
+api_test.js
+db_check.js

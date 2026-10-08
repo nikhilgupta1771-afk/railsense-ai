@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Passenger Portal — RailSense AI</title>
+  <meta name="description" content="Live railway status and safety information for passengers"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/passenger.css">
+  <script>
+    // Enforce Authentication
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+    }
+    
+    // Intercept fetch to add Auth header
+    const originalFetch = window.fetch;
+    window.fetch = function() {
+      let [resource, config] = arguments;
+      if (!config) config = {};
+      if (!config.headers) config.headers = {};
+      config.headers['Authorization'] = 'Bearer ' + token;
+      return originalFetch(resource, config);
+    };
+  </script>
+  
+</head>
+<body>
+  <div class="bg-layer"></div>
+  <div class="train-track"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="header-logo">
+        <div class="logo-icon">🚆</div>
+        <span class="logo-name">Rail<span>Sense</span> AI</span>
+      </a>
+      <div class="header-right">
+        <div class="live-badge"><div class="live-dot"></div> Live Status</div>
+        <a href="/worker" class="worker-link">👷 Staff Login</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-time" id="passenger-time">Loading…</div>
+      <h1>Railway <span class="g">Safety Status</span><br/>& Passenger Information</h1>
+      <div class="hero-sub">Real-time sensor monitoring — powered by AI</div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- SYSTEM STATUS -->
+    <div class="system-card" id="system-card">
+      <div class="system-status-icon" id="sys-icon">⏳</div>
+      <div class="system-status-text" id="sys-text">Checking System Status…</div>
+      <div class="system-status-sub" id="sys-sub"><span class="loading"></span> Connecting to sensor network</div>
+    </div>
+
+    <!-- METRICS -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon">📋</div>
+        <div class="metric-value" id="m-tables">–</div>
+        <div class="metric-label">Sensor Tables</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">📊</div>
+        <div class="metric-value" id="m-records">–</div>
+        <div class="metric-label">Data Records</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">✅</div>
+        <div class="metric-value" id="m-health">–</div>
+        <div class="metric-label">Network Health</div>
+      </div>
+    </div>
+
+    <!-- INFO BANNER -->
+    <div class="alert-banner info" id="info-banner">
+      <div class="ab-icon">ℹ️</div>
+      <div class="ab-text">
+        <div class="ab-title">Sensor Network Active</div>
+        <div class="ab-desc" id="banner-desc">Loading live sensor data from PostgreSQL database…</div>
+      </div>
+    </div>
+
+    <!-- SENSOR DATA STATUS PER TABLE -->
+    <div class="section-title">🗄️ Live Sensor Network Status</div>
+    <div id="table-status-section">
+      <div style="text-align:center;padding:30px;color:var(--muted);"><span class="loading"></span> Loading sensor tables…</div>
+    </div>
+
+    <!-- TRAIN STATUS BOARD -->
+    <div class="section-title">🚆 Train Services</div>
+    <div class="train-board" id="train-board">
+      <!-- Generated dynamically -->
+    </div>
+
+    <!-- ALERT SECTION -->
+    <div id="alert-section" style="margin-top:20px;"></div>
+
+  </div>
+
+  <footer>
+    <p>🚆 <strong>RailSense AI</strong> Passenger Portal</p>
+    <p style="margin-top:6px;">For emergencies, contact Railway Control: <strong style="color:var(--green);">1800-XXX-XXXX</strong></p>
+    <p style="margin-top:6px; font-size:0.78rem;">Data refreshes every 30 seconds · Powered by PostgreSQL sensor network</p>
+  </footer>
+
+  <script src="/js/passenger.js"></script>
+</body>
+</html>

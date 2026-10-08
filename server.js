@@ -454,22 +454,26 @@ setInterval(async () => {
 
 // ─── Periodic ML Inference (every 60s) ──────────────────────────────────────
 setInterval(() => {
-  PythonShell.run('ml_model/inference.py', { mode: 'json' }, async (err, results) => {
-    if (err || !results || !results[0]) return;
-    const preds = Array.isArray(results[0]) ? results[0] : [results[0]];
-    for (const p of preds) {
-      if (p.alert_level && p.alert_level !== 'NORMAL') {
-        try {
-          const alertResult = await pool.query(
-            'INSERT INTO alerts (train_id, alert_level, message, predicted_failure, confidence) VALUES ($1,$2,$3,$4,$5) RETURNING *',
-            [p.train_id || 'SENSOR', p.alert_level, p.message || 'Anomaly detected', p.predicted_failure || 'Unknown', p.confidence || 0]
-          );
-          io.emit('maintenance_alert', alertResult.rows[0]);
-          console.log('🚨 Alert emitted:', alertResult.rows[0]);
-        } catch (e) {}
+  try {
+    PythonShell.run('ml_model/inference.py', { mode: 'json' }, async (err, results) => {
+      if (err || !results || !results[0]) return;
+      const preds = Array.isArray(results[0]) ? results[0] : [results[0]];
+      for (const p of preds) {
+        if (p.alert_level && p.alert_level !== 'NORMAL') {
+          try {
+            const alertResult = await pool.query(
+              'INSERT INTO alerts (train_id, alert_level, message, predicted_failure, confidence) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+              [p.train_id || 'SENSOR', p.alert_level, p.message || 'Anomaly detected', p.predicted_failure || 'Unknown', p.confidence || 0]
+            );
+            io.emit('maintenance_alert', alertResult.rows[0]);
+            console.log('🚨 Alert emitted:', alertResult.rows[0]);
+          } catch (e) {}
+        }
       }
-    }
-  });
+    });
+  } catch (err) {
+    // Gracefully handle environments without python binary
+  }
 }, 60000);
 
 
@@ -519,9 +523,9 @@ setInterval(async () => {
 }, 3000); // Updates every 3 seconds
 // ─── Start Server ─────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🚆 RailSense AI`);
-  console.log(`🌐  http://localhost:${PORT}`);
+  console.log(`🌐  http://0.0.0.0:${PORT}`);
   console.log(`🔐  Login: http://localhost:${PORT}/login`);
   console.log(`👷  Worker: http://localhost:${PORT}/worker`);
   console.log(`👥  Passenger: http://localhost:${PORT}/passenger\n`);

@@ -16,7 +16,13 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const data = await res.json();
+                let data;
+                try {
+                    data = await res.json();
+                } catch (parseErr) {
+                    const text = await res.text().catch(() => '');
+                    data = { error: `Server error (${res.status}): ${text.substring(0, 80) || res.statusText || 'Unable to parse response'}` };
+                }
                 
                 if (res.ok) {
                     localStorage.setItem('token', data.token);
@@ -27,7 +33,8 @@
                     errorMsg.style.display = 'block';
                 }
             } catch (err) {
-                errorMsg.textContent = 'Network error. Please try again.';
+                console.error('Login request failed:', err);
+                errorMsg.textContent = err.message ? `Connection error: ${err.message}` : 'Network error. Please try again.';
                 errorMsg.style.display = 'block';
             } finally {
                 btn.textContent = 'Sign In';

@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/health.css"/>
+  <link rel="stylesheet" href="/css/navbar-common.css"/>
 </head>
 <body>
 
@@ -15,8 +16,15 @@
   <div class="topbar">
     <h1>🏥 Health <span>Monitor</span></h1>
     <div class="topbar-right">
+      <div class="nav-status" id="nav-db-badge">
+        <div class="status-dot"></div>
+        <span id="nav-db-status">DB Connected</span>
+      </div>
       <a href="/">🏠 Home</a>
       <a href="/device" class="primary">📡 Device Tracker</a>
+      <button class="logout-btn" onclick="handleLogout()" title="Logout of RailSense AI">
+        <span class="logout-icon">🚪</span> Logout
+      </button>
     </div>
   </div>
 
@@ -62,6 +70,7 @@
     </div>
   </div>
 
+  <script src="/js/navbar-common.js"></script>
   <script src="/js/health.js"></script>
 </body>
 </html>

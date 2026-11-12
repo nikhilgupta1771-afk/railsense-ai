@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/index.css"/>
-  
+  <link rel="stylesheet" href="/css/navbar-common.css"/>
 </head>
 <body>
   <div class="bg-grid"></div>
@@ -23,9 +23,14 @@
         <div class="logo-icon">🚆</div>
         <span class="logo-text">Rail<span>Sense</span> AI</span>
       </a>
-      <div class="nav-status">
-        <div class="status-dot"></div>
-        <span id="nav-db-status">Connecting…</span>
+      <div class="nav-right-actions">
+        <div class="nav-status" id="nav-db-badge">
+          <div class="status-dot"></div>
+          <span id="nav-db-status">Connecting…</span>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()" title="Logout of RailSense AI">
+          <span class="logout-icon">🚪</span> Logout
+        </button>
       </div>
     </div>
   </nav>
@@ -192,6 +197,7 @@
     </div>
   </footer>
 
+  <script src="/js/navbar-common.js"></script>
   <script src="/js/index.js"></script>
 </body>
 </html>

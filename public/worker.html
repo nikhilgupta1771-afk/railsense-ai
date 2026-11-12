@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/worker.css"/>
+  <link rel="stylesheet" href="/css/navbar-common.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -76,6 +77,9 @@
         <div class="db-dot"><div class="pulse-dot"></div> PostgreSQL</div>
         <div class="db-info">localhost:5432 / poster</div>
       </div>
+      <button class="logout-btn" onclick="handleLogout()" style="width: 100%; justify-content: center; margin-top: 10px;" title="Logout of RailSense AI">
+        <span class="logout-icon">🚪</span> Logout
+      </button>
     </div>
   </aside>
 
@@ -84,9 +88,16 @@
     <div class="topbar">
       <h1>Worker <span>Dashboard</span></h1>
       <div class="topbar-right">
+        <div class="nav-status" id="nav-db-badge">
+          <div class="status-dot"></div>
+          <span id="nav-db-status">DB Connected</span>
+        </div>
         <div class="time-badge" id="clock">Loading…</div>
         <button class="alert-btn" onclick="showSection('anomalies')">🚨 <span id="alert-count">0</span> Alerts</button>
         <a href="/passenger" style="background:linear-gradient(135deg,#10b981,#059669);border:none;color:white;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;text-decoration:none;">🚉 Passenger View</a>
+        <button class="logout-btn" onclick="handleLogout()" title="Logout of RailSense AI">
+          <span class="logout-icon">🚪</span> Logout
+        </button>
       </div>
     </div>
 
@@ -252,6 +263,7 @@
     </div>
   </main>
 
+  <script src="/js/navbar-common.js"></script>
   <script src="/js/worker.js"></script>
 </body>
 </html>

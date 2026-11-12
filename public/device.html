@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <link rel="stylesheet" href="/css/device.css"/>
+  <link rel="stylesheet" href="/css/navbar-common.css"/>
 </head>
 <body>
 
@@ -17,8 +18,15 @@
   <div class="topbar">
     <h1>🔍 Device <span>Tracker</span></h1>
     <div class="topbar-right">
+      <div class="nav-status" id="nav-db-badge">
+        <div class="status-dot"></div>
+        <span id="nav-db-status">DB Connected</span>
+      </div>
       <a href="/">🏠 Home</a>
       <a href="/worker">👷 Worker Dashboard</a>
+      <button class="logout-btn" onclick="handleLogout()" title="Logout of RailSense AI">
+        <span class="logout-icon">🚪</span> Logout
+      </button>
     </div>
   </div>
 
@@ -79,6 +87,7 @@
 
   </div>
 
+  <script src="/js/navbar-common.js"></script>
   <script src="/js/device.js"></script>
 </body>
 </html>

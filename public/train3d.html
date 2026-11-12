@@ -9,6 +9,7 @@
   
   <!-- Custom Independent Dashboard Stylesheet -->
   <link rel="stylesheet" href="/css/train3d.css">
+  <link rel="stylesheet" href="/css/navbar-common.css">
 
   <!-- Core Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -35,12 +36,19 @@
       
       <!-- Right Header Actions Container -->
       <div class="header-actions">
+        <div class="nav-status" id="nav-db-badge">
+          <div class="status-dot"></div>
+          <span id="nav-db-status">DB Connected</span>
+        </div>
         <a href="/" class="btn-home">
           <span class="home-icon">🏠</span> Return Home
         </a>
         <div id="global-status-badge" class="badge badge-nominal">
           SYSTEMS NOMINAL
         </div>
+        <button class="logout-btn" onclick="handleLogout()" title="Logout of RailSense AI">
+          <span class="logout-icon">🚪</span> Logout
+        </button>
       </div>
     </header>
 
@@ -112,51 +120,7 @@
   </div>
 
   <!-- Embedded 3D Framework Orchestrator logic script -->
+  <script src="/js/navbar-common.js"></script>
   <script src="/js/train3d.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

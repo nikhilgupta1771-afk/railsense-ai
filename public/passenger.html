@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/passenger.css">
+  <link rel="stylesheet" href="/css/navbar-common.css">
   <script>
     // Enforce Authentication
     const token = localStorage.getItem('token');
@@ -39,8 +40,14 @@
         <span class="logo-name">Rail<span>Sense</span> AI</span>
       </a>
       <div class="header-right">
-        <div class="live-badge"><div class="live-dot"></div> Live Status</div>
-        <a href="/worker" class="worker-link">👷 Staff Login</a>
+        <div class="nav-status" id="nav-db-badge">
+          <div class="status-dot"></div>
+          <span id="nav-db-status">DB Connected</span>
+        </div>
+        <a href="/worker" class="worker-link">👷 Worker Dashboard</a>
+        <button class="logout-btn" onclick="handleLogout()" title="Logout of RailSense AI">
+          <span class="logout-icon">🚪</span> Logout
+        </button>
       </div>
     </div>
   </header>
@@ -114,6 +121,7 @@
     <p style="margin-top:6px; font-size:0.78rem;">Data refreshes every 30 seconds · Powered by PostgreSQL sensor network</p>
   </footer>
 
+  <script src="/js/navbar-common.js"></script>
   <script src="/js/passenger.js"></script>
 </body>
 </html>
